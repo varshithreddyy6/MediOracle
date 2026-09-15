@@ -1,0 +1,15 @@
+# frontend
+node_modules/
+dist/
+*.tsbuildinfo
+
+# backend
+__pycache__/
+*.pyc
+.venv/
+backend/medioracle.db
+backend/*.db
+
+# environment / OS
+.env
+.DS_Store
