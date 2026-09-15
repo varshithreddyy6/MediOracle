@@ -2,7 +2,7 @@
 
 > ***The operating system for healthcare workforce. A full-stack platform that helps hospitals, clinics and care facilities orchestrate staffing — from the first open shift to the final payment.***
 
-MediOracle is a complete, deploy-ready web application: a **NEUCONOMI-inspired marketing site** at the entry route, secure **multi-hospital authentication**, and a **workspace dashboard** from which staff run twelve operational modules (shifts, scheduling, candidate matching, compliance, timesheets, billing, payments and more).
+MediOracle is a complete, deploy-ready healthcare workforce management platform that combines **secure multi-hospital authentication**, **workforce operations**, **candidate matching**, **compliance management**, **timesheets**, **billing**, **payments**, **analytics**, and more in one unified workspace.
 
 Every account belongs to a hospital, every piece of data is isolated per hospital, and every number in the UI comes from a real API backed by a real database.
 
@@ -20,7 +20,8 @@ Every account belongs to a hospital, every piece of data is isolated per hospita
 8. [**Configuration details**](#8-configuration-details)
 9. [**Verification & testing**](#9-verification--testing)
 10. [**Contributing**](#10-contributing)
-11. [**License**](#11-license)
+11. [**Developer**](#11-developer)
+12. [**License**](#12-license)
 
 ---
 
@@ -28,20 +29,20 @@ Every account belongs to a hospital, every piece of data is isolated per hospita
 
 Healthcare facilities constantly juggle open shifts, agency costs, credential compliance and workforce payments across disconnected tools such as spreadsheets, phone calls and agency portals.
 
-MediOracle consolidates that chaos into **one platform with three connected layers**:
+MediOracle consolidates that workflow into **one platform with three connected layers**:
 
-| **Layer**                                         | **What it gives you**                                                                                                                                                                                                  |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Public landing site (`/`)**                     | A NEUCONOMI-styled marketing page that explains the product: hero, ecosystem diagram, who-we-are, solutions, numbers and footer. Sign-in / Get-started buttons lead into the app.                                      |
-| **Accounts for hospitals (`/signup`, `/signin`)** | New users register **with their hospital name first**, then their personal details. Every hospital gets its own sealed workspace — multiple hospitals coexist on the same deployment with strict data isolation.       |
-| **Operations workspace (`/dashboard`)**           | A hub with a hospital-branded top bar and **12 feature modules**: floor staffing, shifts, schedule, candidate matching, compliance, timesheets, billing, payments, integrations, professionals, analytics and support. |
+| **Layer**                                    | **What it gives you**                                                                                                                                                          |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Public site (`/`)**                        | A professional healthcare workforce landing page explaining the platform, its capabilities, workflow, solutions and value proposition.                                         |
+| **Hospital accounts (`/signup`, `/signin`)** | Hospital-first registration, secure authentication and isolated workspaces for each hospital.                                                                                  |
+| **Operations workspace (`/dashboard`)**      | A centralized workspace containing modules for staffing, shifts, scheduling, candidates, compliance, timesheets, billing, payments, integrations, professionals and analytics. |
 
 ### Core workflow
 
 ```text
 Post an open shift
         ↓
-See AI-ranked candidates
+See ranked candidates
         ↓
 A professional is placed
         ↓
@@ -54,7 +55,9 @@ An invoice is raised
 The professional is paid
 ```
 
-Everything in that chain is backed by the FastAPI + SQLite backend — creating a shift in the UI performs a real **`POST /api/shifts`**, persists the row, and it is still there after a refresh.
+Everything in that workflow is backed by the FastAPI + SQLite backend.
+
+Creating a shift in the UI performs a real **`POST /api/shifts`** request, persists the row in the database, and the data remains available after refreshing the application.
 
 ---
 
@@ -62,28 +65,31 @@ Everything in that chain is backed by the FastAPI + SQLite backend — creating 
 
 ### **Backend**
 
-* [**FastAPI**](https://fastapi.tiangolo.com/) (Python) — REST API, request validation, OpenAPI docs
-* [**SQLite**](https://www.sqlite.org/) — zero-config relational database
+* [**FastAPI**](https://fastapi.tiangolo.com/) (Python) — REST API, request validation and OpenAPI documentation
+* [**SQLite**](https://www.sqlite.org/) — zero-configuration relational database
 * [**Uvicorn**](https://www.uvicorn.org/) — ASGI server
-* Auth: **PBKDF2-SHA256** password hashing (120k iterations, per-user salt) + server-side session tokens sent as **`Bearer`** tokens
+* **PBKDF2-SHA256** — password hashing with 120,000 iterations and per-user salt
+* **Bearer authentication** — server-side session tokens
 
 ### **Frontend**
 
-* [**React 19**](https://react.dev/) + [**TypeScript**](https://www.typescriptlang.org/)
-* [**Vite**](https://vite.dev/) — development server & production bundler
-* [**React Router**](https://reactrouter.com/) — client-side routing with protected routes
-* [**lucide-react**](https://lucide.dev/) — icon set
-* [**Recharts**](https://recharts.org/) — charts
-* **Hand-rolled CSS** (no Tailwind, no UI kit) — one design-token system shared by the landing page and the app
+* [**React 19**](https://react.dev/) — frontend framework
+* [**TypeScript**](https://www.typescriptlang.org/) — type-safe development
+* [**Vite**](https://vite.dev/) — development server and production bundler
+* [**React Router**](https://reactrouter.com/) — client-side routing and protected routes
+* [**lucide-react**](https://lucide.dev/) — icon library
+* [**Recharts**](https://recharts.org/) — charts and data visualization
+* **Hand-rolled CSS** — custom design system without Tailwind or a UI kit
 
-### **Design system**
+### **MediOracle design system**
 
 * Ivory **`#fcf8f3`** surfaces
 * Accent red **`#c60000`**
 * Ink **`#0b0b0b`**
-* **Montserrat** — logotype and body
-* **Spinnaker** — display headings
-* No sidebars anywhere — feature switching happens only through the dashboard hub
+* **Montserrat** for logotype and body text
+* **Spinnaker** for display headings
+* Consistent typography, spacing and visual tokens throughout the application
+* No sidebars — feature navigation is handled through the dashboard hub
 
 ---
 
@@ -97,7 +103,7 @@ Everything in that chain is backed by the FastAPI + SQLite backend — creating 
 | Node.js  | 20.19+ or 22.12+ | `node --version`    |
 | npm      | 10+              | `npm --version`     |
 
-No external database or services are required — SQLite ships with Python.
+No external database or services are required. SQLite ships with Python.
 
 ### **Option A — One command (recommended)**
 
@@ -115,11 +121,11 @@ Then open:
 http://localhost:5175
 ```
 
-`dev.sh` does three things:
+`dev.sh` performs three operations:
 
 1. Installs the Python dependencies from `requirements.txt`.
-2. Builds the frontend **if `frontend/dist/` does not exist yet**.
-3. Starts **one process** that serves the entire product — the built frontend and API — on the same origin.
+2. Builds the frontend if **`frontend/dist/`** does not exist.
+3. Starts one process serving the frontend and API on the same origin.
 
 The API is available under:
 
@@ -129,7 +135,7 @@ The API is available under:
 
 ### **Option B — Development mode with hot reload**
 
-#### Terminal 1 — Backend API on :8000
+#### Terminal 1 — Backend API
 
 ```bash
 cd backend
@@ -143,7 +149,7 @@ Or:
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-#### Terminal 2 — Vite development server on :5173
+#### Terminal 2 — Frontend
 
 ```bash
 cd frontend
@@ -151,7 +157,13 @@ npm install
 npm run dev
 ```
 
-In development mode, Vite serves the frontend with hot module replacement and forwards every **`/api`** request to the backend.
+The Vite development server runs on:
+
+```text
+http://localhost:5173
+```
+
+Vite proxies `/api` requests to the backend on port `8000`.
 
 ### **Option C — Production build**
 
@@ -164,9 +176,9 @@ cd ../backend
 uvicorn app.main:app --host 0.0.0.0 --port 5175
 ```
 
-The FastAPI app automatically detects **`frontend/dist/`** and serves the production frontend.
+The FastAPI application automatically detects **`frontend/dist/`** and serves the compiled frontend.
 
-It also provides SPA fallback support so deep links such as:
+SPA fallback support allows routes such as:
 
 ```text
 /dashboard
@@ -175,7 +187,7 @@ It also provides SPA fallback support so deep links such as:
 /analytics
 ```
 
-continue to work after a refresh.
+to continue working after a page refresh.
 
 ### **Rebuilding after frontend changes**
 
@@ -190,49 +202,48 @@ Then restart the server.
 
 ## **Demo accounts**
 
-Two hospitals are pre-seeded so multi-hospital isolation can be demonstrated immediately.
+Two hospitals are pre-seeded for demonstrating multi-hospital isolation.
 
 | **Hospital**           | **Email**                | **Password**   |
 | ---------------------- | ------------------------ | -------------- |
 | AVT Hospitals          | `anna@avthospitals.demo` | `Demo@2026`    |
 | Sunrise Multispecialty | `ravi@sunrise.demo`      | `Sunrise@2026` |
 
-You can also click **Get started** and register a brand-new hospital.
+You can also select **Get started** and register a completely new hospital.
 
-A newly registered hospital starts with its own seeded dataset containing ward roster, shifts, candidates, timesheets and invoices personalized with the hospital name.
+A newly registered hospital receives its own seeded dataset containing ward information, shifts, candidates, timesheets and invoices personalized with the hospital name.
 
 ---
 
 ## 4. What was worked on
 
-The project was developed as a full vertical slice — design system, public site, real backend, and a data-driven workspace.
+The project was developed as a complete vertical slice covering the public website, design system, authentication, backend, database and operational workspace.
 
-### **1. UI analysis & design system**
+### **1. UI & design system**
 
-Reverse-engineered the target visual language inspired by NEUCONOMI:
+A complete healthcare-focused visual system was implemented using:
 
-* Ivory / red / black palette
+* Ivory, red and black color palette
 * Montserrat + Spinnaker typography
-* Overline logotype mark
-* Ecosystem diagram
-* Section patterns
-* Shared CSS custom properties
+* Consistent spacing and layout tokens
+* Custom CSS
+* Consistent branding across the landing page, authentication screens and dashboard
+* Responsive application structure
 
-The same design tokens drive the landing page and application screens.
-
-### **2. NEUCONOMI-style landing page**
+### **2. Public landing page**
 
 The landing page includes:
 
-* Hero: **"Healthcare Staffing / Orchestrated."**
+* Hero section
+* Healthcare workforce messaging
 * Staffing ecosystem diagram
-* Professionals ↔ MediOracle ↔ Facilities
-* Agencies and Insurers
+* Professionals, facilities, agencies and insurers
 * Who-we-are section
 * What-we-do section
-* Platform numbers
+* Platform metrics
 * Solutions grid
-* CTA footer
+* Call-to-action section
+* Footer
 
 ### **3. Backend from scratch**
 
@@ -241,62 +252,81 @@ The backend includes:
 * FastAPI application
 * SQLite database
 * 12 database tables
-* PBKDF2 password hashing
-* Server-side session tokens
+* Password hashing
+* Server-side sessions
 * Hospital-scoped queries
-* Per-hospital demo data seeding
-* Computed workforce analytics
+* Per-hospital demo data
+* Workforce analytics
 * REST API endpoints
 * OpenAPI documentation
 
-### **4. Authentication & multi-hospital model**
+### **4. Authentication & multi-hospital architecture**
 
-MediOracle uses a hospital-first account architecture:
+MediOracle uses a hospital-first account architecture.
 
-1. Register the hospital.
-2. Register the user.
-3. Create a hospital-specific workspace.
-4. Seed hospital-specific demo data.
-5. Authenticate through server-side sessions.
+The flow is:
+
+```text
+Register hospital
+       ↓
+Register user
+       ↓
+Create hospital workspace
+       ↓
+Seed hospital data
+       ↓
+Authenticate user
+       ↓
+Access isolated workspace
+```
 
 A dedicated **`hospitals`** table establishes ownership of records.
 
-Every data endpoint filters by the signed-in user's **`hospital_id`**, ensuring that hospitals cannot access each other's shifts, professionals, invoices or other operational data.
+Every data endpoint filters by the authenticated user's **`hospital_id`** so hospitals cannot access each other's operational data.
 
-### **5. Workspace dashboard + 12 modules**
+### **5. Workspace dashboard**
 
-The dashboard acts as the central hub.
+The dashboard acts as the central hub for the platform.
 
-KPI tiles are powered by:
+Workforce KPIs are powered by:
 
 ```text
 /api/analytics/workforce
 ```
 
-Feature modules include:
+The dashboard provides access to the platform's operational modules without relying on a sidebar-based navigation structure.
 
-* Floor staffing
-* Shifts
-* Schedule
-* Candidates
-* Compliance
-* Timesheets
-* Billing
-* Payments
-* Integrations
-* Professionals
-* Analytics
-* Support
+### **6. Real database-backed operations**
 
-### **6. Single-origin serving**
+Operational actions are connected to the backend.
 
-The backend serves the compiled frontend so the complete product can run from a single port.
+For example, creating a shift from the UI performs:
 
-This simplifies deployment and eliminates the need to configure separate frontend and backend origins in production.
+```text
+POST /api/shifts
+```
 
-### **7. End-to-end verification**
+The shift is persisted in SQLite and remains available after refreshing the application.
 
-The complete application flow was verified using scripted browser tests with Playwright:
+### **7. Single-origin serving**
+
+The backend can serve the compiled frontend and API from the same port.
+
+This provides a simple deployment architecture with:
+
+```text
+Frontend
+   +
+Backend API
+   +
+Database
+   ↓
+Single application origin
+```
+
+### **8. End-to-end verification**
+
+The application was tested through the complete workflow:
 
 ```text
 Landing
@@ -309,7 +339,7 @@ Create shift
    ↓
 Database persistence
    ↓
-Hospital-scoped invoices
+Hospital-scoped data
    ↓
 Refresh
    ↓
@@ -321,7 +351,7 @@ Landing
    ↓
 Register second hospital
    ↓
-Verify isolated dataset
+Verify isolated data
 ```
 
 ---
@@ -330,51 +360,57 @@ Verify isolated dataset
 
 ### **Public site**
 
-* **NEUCONOMI-inspired landing page** at **`/`**
-* Red logotype
-* Caps navigation
+* **Professional healthcare workforce landing page** at **`/`**
+* Red MediOracle logotype
+* Navigation
 * Hero section
 * Staffing ecosystem diagram
 * Capability sections
-* Platform numbers
+* Platform metrics
 * Solutions grid
-* CTA footer
+* CTA section
+* Footer
 * Sign in / Get started buttons
 
 ### **Accounts & hospitals**
 
 * **Hospital-first sign-up**
+* Hospital registration
+* User registration
 * Secure authentication
 * **PBKDF2-SHA256** password hashing
 * Opaque session tokens
 * **`Authorization: Bearer`** authentication
 * Server-side logout
-* True multi-hospital data isolation
+* Session persistence
+* Multi-hospital data isolation
 
 ### **Operations workspace**
 
-| **Module**     | **Route**             | **What it does**                                 |
-| -------------- | --------------------- | ------------------------------------------------ |
-| Overview       | **`/dashboard`**      | Coverage KPIs, open-shift alerts and quick stats |
-| Floor staffing | **`/floor-staffing`** | Ward-by-ward filled / required coverage          |
-| Shifts         | **`/shifts`**         | Live open-shift board and shift creation         |
-| Schedule       | **`/schedule`**       | Weekly schedule for wards                        |
-| Candidates     | **`/candidates`**     | AI-style ranked professionals                    |
-| Compliance     | **`/compliance`**     | Credential status and expiry watch               |
-| Timesheets     | **`/timesheets`**     | Worked hours and approval states                 |
-| Billing        | **`/billing`**        | Invoices and receivables                         |
-| Payments       | **`/payments`**       | Professional payouts                             |
-| Integrations   | **`/integrations`**   | HR, payroll, credential and billing connectors   |
-| Professionals  | **`/professional`**   | Talent directory                                 |
-| Analytics      | **`/analytics`**      | Workforce performance metrics                    |
+| **Module**     | **Route**             | **What it does**                                      |
+| -------------- | --------------------- | ----------------------------------------------------- |
+| Overview       | **`/dashboard`**      | Coverage KPIs, open-shift alerts and quick statistics |
+| Floor staffing | **`/floor-staffing`** | Ward-by-ward filled / required coverage               |
+| Shifts         | **`/shifts`**         | Open-shift board and shift creation                   |
+| Schedule       | **`/schedule`**       | Weekly schedule for wards                             |
+| Candidates     | **`/candidates`**     | Ranked professionals with matching information        |
+| Compliance     | **`/compliance`**     | Credential status and expiry tracking                 |
+| Timesheets     | **`/timesheets`**     | Worked hours and approval states                      |
+| Billing        | **`/billing`**        | Invoices and receivables                              |
+| Payments       | **`/payments`**       | Professional payouts                                  |
+| Integrations   | **`/integrations`**   | HR, payroll, credential and billing connectors        |
+| Professionals  | **`/professional`**   | Talent directory                                      |
+| Analytics      | **`/analytics`**      | Workforce performance metrics                         |
 
 ### **Platform behaviours**
 
 * **Protected routes** — unauthenticated visitors are redirected to sign-in.
 * **Session persistence** — the token is stored in **`localStorage`** under **`mo_token`**.
-* **SPA deep links** — routes such as **`/dashboard`** and **`/shifts`** remain directly accessible after refresh.
-* **Consistent identity** — one palette, one type system and one logo treatment across the landing page and application.
-* **Real API-backed data** — application numbers and operational data are generated from database records rather than hard-coded UI values.
+* **SPA deep links** — application routes remain accessible after refresh.
+* **Hospital-scoped data** — API queries are filtered by the authenticated user's **`hospital_id`**.
+* **Real API-backed data** — operational values are retrieved from the backend.
+* **Persistent operations** — created records are stored in SQLite.
+* **Consistent identity** — unified typography, colors and branding across the application.
 
 ---
 
@@ -424,16 +460,16 @@ MediOracle/
 
 ### **Key ideas behind the layout**
 
-* `main.py` contains authentication, hospital scoping, endpoints and static serving.
+* `main.py` handles authentication, hospital scoping, API endpoints and static serving.
 * `db.py` contains the SQLite connection helper and database schema.
-* `seed.py` provides per-hospital demo data.
-* Feature pages live under **`pages/features/`**.
+* `seed.py` provides hospital-specific demo data.
+* Feature pages are organized under **`pages/features/`**.
 * **`lib/api.ts`** provides the shared API wrapper.
 * **`lib/auth.tsx`** manages authentication state.
 * **`lib/data.ts`** contains feature registry and module data.
-* **`styles.css`** is the single source of truth for the visual system.
+* **`styles.css`** is the central source for the application's design system.
 
-Adding a new module is designed to require a route entry and a dashboard tile without changing the overall architecture.
+The architecture is intentionally small and readable so that new modules can be added without significantly changing the existing structure.
 
 ---
 
@@ -447,7 +483,7 @@ Single-origin mode:
 http://localhost:5175/api
 ```
 
-Authenticated calls require:
+Authenticated requests require:
 
 ```http
 Authorization: Bearer <token>
@@ -458,19 +494,19 @@ Authorization: Bearer <token>
 | **Method** | **Endpoint**                   | **Auth** | **Purpose**                                |
 | ---------- | ------------------------------ | -------- | ------------------------------------------ |
 | **POST**   | **`/api/auth/signup`**         | —        | Create hospital + owner and seed demo data |
-| **POST**   | **`/api/auth/login`**          | —        | Email + password → token                   |
+| **POST**   | **`/api/auth/login`**          | —        | Authenticate user and return token         |
 | **POST**   | **`/api/auth/logout`**         | ✓        | Invalidate session                         |
-| **GET**    | **`/api/auth/me`**             | ✓        | Current user + hospital                    |
-| **GET**    | **`/api/analytics/workforce`** | ✓        | Fill rate, coverage and open gaps          |
+| **GET**    | **`/api/auth/me`**             | ✓        | Return current user and hospital           |
+| **GET**    | **`/api/analytics/workforce`** | ✓        | Workforce fill rate and coverage           |
 | **GET**    | **`/api/shifts`**              | ✓        | Hospital shift board                       |
 | **POST**   | **`/api/shifts`**              | ✓        | Create and persist a shift                 |
 | **GET**    | **`/api/wards`**               | ✓        | Ward coverage                              |
 | **GET**    | **`/api/candidates`**          | ✓        | Ranked candidate pool                      |
-| **GET**    | **`/api/timesheets`**          | ✓        | Timesheets with approval states            |
+| **GET**    | **`/api/timesheets`**          | ✓        | Timesheets and approval states             |
 | **GET**    | **`/api/invoices`**            | ✓        | Hospital-scoped invoices                   |
 | **GET**    | **`/api/payments`**            | ✓        | Professional payouts                       |
 | **GET**    | **`/api/professionals`**       | ✓        | Talent directory                           |
-| **GET**    | **`/api/compliance`**          | ✓        | Credential / expiry status                 |
+| **GET**    | **`/api/compliance`**          | ✓        | Credential and expiry status               |
 | **GET**    | **`/api/integrations`**        | ✓        | Connector states                           |
 | **GET**    | **`/api/schedule`**            | ✓        | Weekly schedule                            |
 | **GET**    | **`/api/health`**              | —        | Liveness probe                             |
@@ -535,6 +571,8 @@ FastAPI's interactive OpenAPI documentation is available at:
 http://localhost:5175/docs
 ```
 
+---
+
 ## 8. Configuration details
 
 ### **Ports**
@@ -547,15 +585,16 @@ http://localhost:5175/docs
 ### **Environment & data**
 
 * No environment variables are required.
-* The SQLite database is created automatically.
-* Demo data is seeded automatically on first run.
-* The database file is named **`medioracle.db`**.
+* SQLite is used as the database.
+* The database is created automatically.
+* Demo data is seeded automatically.
+* The database file is **`medioracle.db`**.
 * Session tokens are stored in the **`sessions`** table.
 * The browser stores the session token in **`localStorage`** under **`mo_token`**.
 
 ### **Resetting the database**
 
-To reset the local database to a fresh state, stop the server and delete:
+Stop the server and delete:
 
 ```text
 backend/medioracle.db
@@ -565,13 +604,13 @@ The database will be recreated automatically on the next run.
 
 ### **Rebranding**
 
-The main design tokens are defined in:
+The primary design tokens are located in:
 
 ```text
 frontend/src/styles.css
 ```
 
-The core values include:
+Example:
 
 ```css
 :root {
@@ -584,52 +623,51 @@ The core values include:
 }
 ```
 
-Changing **`--accent`** and **`--neo-red`** updates the primary product branding across the application.
+Changing the primary color variables updates the core product branding.
 
-The MediOracle logotype uses the `neoLogo` markup.
-
-### **Vite configuration**
-
-The Vite configuration maintains the development proxy:
-
-```text
-/api → http://localhost:8000
-```
-
-The configuration also supports network and preview hosting.
+---
 
 ## 9. Verification & testing
 
-The full journey has been verified using scripted browser tests with the real backend.
+The application was verified through scripted browser tests against the real backend.
 
-### **Current verification**
+### **Verified scenarios**
 
-**7/7 checks passing** in the single-process production mode.
+* Landing page renders correctly
+* Sign-in flow works
+* Dashboard loads the authenticated hospital
+* Shift creation works
+* Created shifts persist in the database
+* Dashboard refresh preserves the session
+* Sign-out returns to the landing page
+* New hospital registration works
+* Newly registered hospitals receive their own dataset
+* Hospital data remains isolated
 
-Verified scenarios include:
+### **API verification**
 
-1. `/` renders the styled NEUCONOMI-inspired landing page.
-2. Landing page → **Sign in** → dashboard.
-3. Dashboard displays the correct hospital identity.
-4. Creating a shift adds a new row and persists it in the database.
-5. Refreshing `/dashboard` preserves the session and re-renders data.
-6. **Sign out** returns the user to the landing page.
-7. Registering a second hospital creates an isolated workspace.
-
-### **API-level verification**
-
-The API was also checked for:
+The API was also tested for:
 
 * **401** without authentication
+* **401** with invalid authentication
 * **409** for duplicate email
 * Hospital-scoped invoices
 * Hospital-scoped operational data
-* Health endpoint
 * Shift creation
-* Authentication flow
+* Authentication
 * Session invalidation
+* Health endpoint
 
-Backend smoke checks cover the API endpoints described in the API reference.
+### **Build verification**
+
+The frontend should build successfully using:
+
+```bash
+cd frontend
+npm run build
+```
+
+---
 
 ## 10. Contributing
 
@@ -637,32 +675,31 @@ Contributions are welcome.
 
 The codebase is intentionally small and readable.
 
-### **1. Fork & branch**
+### **1. Create a feature branch**
 
 ```bash
 git checkout -b feature/your-feature
 ```
 
-### **2. Set up**
+### **2. Set up the project**
 
-Follow the setup instructions above.
+Follow the installation instructions in the **How to run the project** section.
 
-For development, Option B provides hot reload.
+For development, use the two-terminal setup for hot reload.
 
-### **3. Keep the conventions**
+### **3. Development conventions**
 
 * Use **TypeScript strict mode**.
 * Keep React components functional.
 * Route API data through **`lib/api.ts`** and **`useApi()`**.
-* Avoid ad-hoc `fetch` calls directly inside pages.
-* Do not introduce CSS frameworks.
-* Extend **`styles.css`** using the existing token system.
-* Do not add sidebars.
-* New features should be represented through the dashboard hub.
+* Avoid ad-hoc `fetch` calls directly inside page components.
+* Do not introduce unnecessary CSS frameworks.
+* Extend **`styles.css`** using the existing design tokens.
+* Keep dashboard-based navigation consistent.
 * Every new data endpoint must filter by the authenticated user's **`hospital_id`**.
-* Multi-hospital isolation is **non-negotiable**.
+* Maintain strict multi-hospital data isolation.
 
-### **4. Verify before opening a PR**
+### **4. Verify before submitting**
 
 Run:
 
@@ -671,57 +708,61 @@ cd frontend
 npm run build
 ```
 
-Then exercise the feature in the browser end-to-end.
+Then test the feature in the browser end-to-end.
 
 ### **5. Commit conventions**
 
-Use short imperative commit subjects:
+Use short, imperative commit messages:
 
 ```text
 Add X
 Fix Y
 Update Z
+Improve Z
 ```
 
-### **Good first issues**
+### **Potential improvements**
 
-Potential improvements include:
+Some possible future enhancements include:
 
-* Form validation polish
-* Pagination on the shift board
-* Export-to-CSV on billing
-* Dark-mode exploration
-* Additional analytics
-* More advanced candidate matching
-* Expanded integration connectors
+* Form validation improvements
+* Shift-board pagination
+* Billing CSV export
+* Advanced candidate matching
+* More workforce analytics
+* Additional healthcare integrations
+* Expanded notification system
+* Role-based permissions
+* Production-grade database support
+* Dark mode
 
-## 11. License
-
-Copyright © 2026 MediOracle. All rights reserved.
-
-If you plan to fork or reuse the project, add your preferred license file, such as:
-
-```text
-LICENSE
-```
-
-Possible choices include:
-
-* MIT
-* Apache-2.0
-
-Update this section accordingly if a license is added.
-
----
-
-## Developer
+## 11. Developer
 
 **Varshith Reddy**
 Developer
 
 📧 **Email:** [varshithreddyy6@gmail.com](mailto:varshithreddyy6@gmail.com)
+
 💻 **GitHub:** [varshithreddyy6](https://github.com/varshithreddyy6)
-🚀 **Project:** [MediOracle](https://github.com/varshithreddyy6/MediOracle)
+
+🚀 **MediOracle Repository:** [github.com/varshithreddyy6/MediOracle](https://github.com/varshithreddyy6/MediOracle)
+
+## 12. License
+
+Copyright © 2026 **MediOracle**. All rights reserved.
+
+If you plan to fork or reuse the project, add an appropriate license file such as:
+
+```text
+LICENSE
+```
+
+Possible options include:
+
+* MIT
+* Apache-2.0
+
+Update this section once a license has been selected.
 
 ---
 
@@ -729,6 +770,6 @@ Developer
 
 **MediOracle** — Healthcare Staffing, Orchestrated. ⚕️
 
-Developed by **Varshith Reddy**
+**Developed by Varshith Reddy**
 
 </div>
